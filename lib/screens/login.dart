@@ -1,3 +1,4 @@
+import 'package:firebase_app/screens/car_screen/reste_page.dart';
 import 'package:firebase_app/screens/register.dart';
 import 'package:firebase_app/services/auth.dart';
 import 'package:firebase_app/utils/constant.dart';
@@ -54,6 +55,14 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 SizedBox(
                   height: 10,
+                ),
+                FlatButton(
+                  child: Text("Mot de passe oublié",
+                      style: TextStyle(color: Colors.lightBlue)),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (ctx) => ResetPassword()));
+                  },
                 ),
                 RaisedButton(
                   onPressed: () async {

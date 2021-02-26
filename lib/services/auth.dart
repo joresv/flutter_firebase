@@ -49,6 +49,15 @@ class AuthServices {
     }
   }
 
+  Future<bool> resetpassword(String email) async {
+    try {
+      await auth.sendPasswordResetEmail(email: email);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   Future<bool> googleSignIn() async {
     try {
       GoogleSignInAccount googleUser = await googlesignIn.signIn();
