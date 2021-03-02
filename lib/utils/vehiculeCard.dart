@@ -4,12 +4,15 @@ import 'package:firebase_app/screens/car_screen/addCar.dart';
 import 'package:firebase_app/screens/car_screen/carDetails.dart';
 import 'package:firebase_app/screens/car_screen/updateCar.dart';
 import 'package:firebase_app/screens/car_screen/updateMoto.dart';
+import 'package:firebase_app/screens/comment/comment_page.dart';
+import 'package:firebase_app/screens/comment/stream_comment_count.dart';
 import 'package:firebase_app/services/db.dart';
 import 'package:firebase_app/utils/constant.dart';
 import 'package:firebase_app/utils/loading.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 class VCard extends StatelessWidget {
   Vehicule car;
@@ -28,6 +31,7 @@ class VCard extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
     Color themeColor =
         car.type == CarType.car ? Colors.green : Colors.lightBlue;
+
     final user = FirebaseAuth.instance.currentUser;
     if (car.like.contains(user.uid)) {
       likeColor = Colors.lightBlue;
@@ -165,6 +169,10 @@ class VCard extends StatelessWidget {
                               },
                             ),
                             Text(car.dislike.length.toString()),
+                            StreamProvider<int>.value(
+                              value: DBServices().getCountComment(car.id),
+                              child: StreamComment(vehicule: car),
+                            )
                           ],
                         )
                       ],

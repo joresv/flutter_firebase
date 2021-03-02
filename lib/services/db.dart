@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_app/model/comment.dart';
 import 'package:firebase_app/model/vehicule.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -13,6 +14,8 @@ class DBServices {
       FirebaseFirestore.instance.collection("carousel");
   final CollectionReference vehiculecol =
       FirebaseFirestore.instance.collection("vehicule");
+  final CollectionReference commentcol =
+      FirebaseFirestore.instance.collection("commentaires");
 
   Future saveUser(UserM user) async {
     try {
@@ -136,6 +139,62 @@ class DBServices {
   Stream<List<UserM>> get getAllUsers {
     return usercol.snapshots().map((users) {
       return users.docs.map((e) => UserM.fromJson(e.data())).toList();
+    });
+  }
+
+  Future<bool> add_comment(Comment comment) async {
+    try {
+      await commentcol.doc().set(
+          comment.toMap()..update("date_comment", (value) => Timestamp.now()));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Stream<int> getCountComment(String id) {
+    return commentcol
+        .where("id_comment_pub", isEqualTo: id)
+        .snapshots()
+        .map((comments) {
+      return comments.docs
+          .map((e) => Comment.fromJson(e.data(), e.id))
+          .toList()
+          .length;
+    });
+  }
+
+  Stream<List<Comment>> gecomment(String id) {
+    return commentcol
+        .where("id_comment_pub", isEqualTo: id)
+        .snapshots()
+        .map((comments) {
+      return comments.docs
+          .map((e) => Comment.fromJson(e.data(), e.id))
+          .toList();
+    });
+  }
+
+  Stream<List<Comment>> gecommentComment(String id) {
+    return commentcol
+        .where("id_comment", isEqualTo: id)
+        .snapshots()
+        .map((comments) {
+      return comments.docs
+          .map((e) => Comment.fromJson(e.data(), e.id))
+          .toList();
+    });
+  }
+
+  Stream<int> getCountCommentComment(String id) {
+    return commentcol
+        .where("id_comment", isEqualTo: id)
+        .snapshots()
+        .map((comments) {
+      return comments.docs
+          .map((e) => Comment.fromJson(e.data(), e.id))
+          .toList()
+          .length;
     });
   }
 }
